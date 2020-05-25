@@ -8,6 +8,8 @@ services:
       MYSQL_DATABASE: 'matomo'
     volumes:
       - matomo-db:/var/lib/mysql
+    networks:
+      - matomo-network
 
   matomo:
     image: matomo:fpm
@@ -20,6 +22,8 @@ services:
       MATOMO_DATABASE_USERNAME: 'root'
       MATOMO_DATABASE_PASSWORD: 'db'
       MATOMO_DATABASE_DBNAME: 'matomo'
+    networks:
+      - matomo-network
 
   matomo-web:
     image: nginx:alpine
@@ -37,12 +41,15 @@ services:
       - ./config:/var/www/html/config:rw
       - ./logs:/var/www/html/logs
     networks:
+      - matomo-network
       - nginx-proxy
 
 volumes:
   matomo-db:
 
 networks:
+  matomo-network:
+    driver: bridge
   nginx-proxy:
     external: true
     name: nginx-proxy
