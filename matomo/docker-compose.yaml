@@ -3,6 +3,7 @@ version: "3.7"
 services:
   matomo-db:
     image: mysql:8.0
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'db'
       MYSQL_DATABASE: 'matomo'
@@ -13,11 +14,9 @@ services:
 
   matomo:
     image: matomo:fpm
-    links:
-      - db
+    restart: always
     volumes:
-      - ./config:/var/www/html/config:rw
-      - ./logs:/var/www/html/logs
+      - matomo:/var/www/html
     environment:
       MATOMO_DATABASE_USERNAME: 'root'
       MATOMO_DATABASE_PASSWORD: 'db'
@@ -38,14 +37,14 @@ services:
       - 80
     volumes:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
-      - ./config:/var/www/html/config:rw
-      - ./logs:/var/www/html/logs
+      - matomo:/var/www/html:ro
     networks:
       - matomo-network
       - nginx-proxy
 
 volumes:
   matomo-db:
+  matomo:
 
 networks:
   matomo-network:
