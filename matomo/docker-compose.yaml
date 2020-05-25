@@ -34,8 +34,8 @@ services:
       - 80
     volumes:
       - ./docker-nginx.conf:/etc/nginx/nginx.conf:ro
-    volumes_from:
-      - matomo
+      - ./config:/var/www/html/config:rw
+      - ./logs:/var/www/html/logs
     networks:
       - nginx-proxy
 
